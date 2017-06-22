@@ -1,0 +1,11 @@
+language:
+  language_code: es-ES
+main:
+  location: sala
+  name: test
+  prefix: mayordomo
+mqtt:
+  host: localhost
+  password: 
+  port: 1883
+  username: 
