@@ -14,9 +14,6 @@ import mqtt_handler
 import audio_handler
 import configuration_handler as config
 
-MAYORDOMO_PREFIX = "mayordomo"
-DEVICE_NAME = "test"
-DEVICE_LOCATION = ""
 MODEL_NAME = "mayordomo.pmdl"
 
 logging.basicConfig(format='%(asctime)s %(levelname)-8s - %(name)-20s - %(message)s', level=logging.DEBUG)
@@ -24,16 +21,25 @@ logger = logging.getLogger("main")
 
 
 class VoiceCommandHandler(object):
-    def __init__(self, device_name="", device_location="", prefix="mayordomo"):
+    def __init__(self, prefix="mayordomo", device_name="", device_location="", owner="", description=""):
         if not device_name:
             raise ValueError
         self.device_name = device_name
         self.device_location = device_location
+        self.device_owner = owner
+        self.device_description = description
         self.mayordomo_prefix = prefix
         self.register_topic = "{}/devices/register".format(self.mayordomo_prefix)
         self.answer_topic = "{}/devices/{}/answer".format(self.mayordomo_prefix, self.device_name)
         self.question_counter = 0
         mqtt_handler.subscribe(self.answer_topic, self.answer_handler)
+        self.advertise_device()
+
+    def advertise_device(self):
+        register_topic = "{}/devices/register/{}".format(self.mayordomo_prefix, self.device_name)
+        register_payload = {"name": self.device_name, "owner": self.device_owner,
+                             "description": self.device_description, "location": self.device_location}
+        mqtt_handler.publish(register_topic, json.dumps(register_payload), 1, True)
 
     def answer_handler(self, _, __, msg):
         answer = json.loads(msg.payload)
@@ -101,7 +107,10 @@ if __name__ == "__main__":
     current_dir = os.path.dirname(os.path.abspath(__file__))
     model_path = os.path.join(current_dir, "resources/%s" % MODEL_NAME)
  
-    vch = VoiceCommandHandler(config.get_section("main")["name"])
+    vch = VoiceCommandHandler(config.get_section("main")["prefix"], config.get_section("main")["name"],
+                              config.get_section("main")["location"], config.get_section("main")["owner"],
+                              config.get_section("main")["description"])
+
     detector = snowboydecoder.HotwordDetector(model_path, sensitivity=0.4)
 
     snowboydecoder.play_audio_file(os.path.join(current_dir, "resources/on.wav"))
