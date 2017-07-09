@@ -1,9 +1,11 @@
 language:
   language_code: es-ES
 main:
-  location: sala
-  name: test
   prefix: mayordomo
+  name: test
+  owner: test
+  location: unknown
+  description: Test device description
 mqtt:
   host: localhost
   password: 
