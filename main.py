@@ -8,7 +8,7 @@ import threading
 import os
 import time
 import json
-import snowboydecoder
+from snowboy import snowboydecoder
 import google_cloud_speech_handler
 import mqtt_handler
 import audio_handler
@@ -71,14 +71,14 @@ class VoiceCommandHandler(object):
 
 def stream_recognition():
     vch.complete_silence("ON")
-    snowboydecoder.play_audio_file(os.path.join(current_dir, "resources/on.wav"))
+    snowboydecoder.play_on_sound()
     start_time = time.time()
     message = google_cloud_speech_handler.start()
     if not message:
-        snowboydecoder.play_audio_file(os.path.join(current_dir, "resources/error.wav"))
+        snowboydecoder.play_error_sound()
         vch.complete_silence("OFF")
         return
-    snowboydecoder.play_audio_file(os.path.join(current_dir, "resources/ok.wav"))
+    snowboydecoder.play_ok_sound()
     logger.info("You said: {0} ({1} seconds)".format(message, time.time() - start_time))
     payload = {"device_name": config.get_section("main")["name"], "user_name": "aitor", "message": message}
     vch.process_voice_command(payload=json.dumps(payload))
@@ -105,14 +105,14 @@ if __name__ == "__main__":
     google_cloud_speech_handler.initialize(language_handler.get_language().code)
 
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    model_path = os.path.join(current_dir, "resources/%s" % MODEL_NAME)
- 
+    model_path = os.path.join(current_dir, "voice_models/%s" % MODEL_NAME)
+
     vch = VoiceCommandHandler(config.get_section("main")["prefix"], config.get_section("main")["name"],
                               config.get_section("main")["location"], config.get_section("main")["owner"],
                               config.get_section("main")["description"])
 
     detector = snowboydecoder.HotwordDetector(model_path, sensitivity=0.4)
 
-    snowboydecoder.play_audio_file(os.path.join(current_dir, "resources/on.wav"))
+    snowboydecoder.play_on_sound()
     detector.start(detected_callback=speech_recognition, sleep_time=0.03)
     detector.terminate()
