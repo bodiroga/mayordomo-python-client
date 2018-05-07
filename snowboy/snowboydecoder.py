@@ -10,11 +10,15 @@ import logging
 
 logger = logging.getLogger("snowboy")
 logger.setLevel(logging.INFO)
+
 TOP_DIR = os.path.dirname(os.path.abspath(__file__))
 
 RESOURCE_FILE = os.path.join(TOP_DIR, "resources/common.res")
-DETECT_DING = os.path.join(TOP_DIR, "resources/ding.wav")
-DETECT_DONG = os.path.join(TOP_DIR, "resources/dong.wav")
+ON_SOUND_FILE = os.path.join(TOP_DIR, "sounds/on.wav")
+OK_SOUND_FILE = os.path.join(TOP_DIR, "sounds/ok.wav")
+ERROR_SOUND_FILE = os.path.join(TOP_DIR, "sounds/error.wav")
+DING_SOUND_FILE = os.path.join(TOP_DIR, "sounds/ding.wav")
+DONG_SOUND_FILE = os.path.join(TOP_DIR, "sounds/dong.wav")
 
 
 class RingBuffer(object):
@@ -33,7 +37,19 @@ class RingBuffer(object):
         return tmp
 
 
-def play_audio_file(fname=DETECT_DING):
+def play_on_sound():
+    play_audio_file(ON_SOUND_FILE)
+
+
+def play_ok_sound():
+    play_audio_file(OK_SOUND_FILE)
+
+
+def play_error_sound():
+    play_audio_file(ERROR_SOUND_FILE)
+
+
+def play_audio_file(fname=ON_SOUND_FILE):
     """Simple callback function to play a wave file. By default it plays
     a Ding sound.
 
