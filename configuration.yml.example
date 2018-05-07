@@ -8,6 +8,6 @@ main:
   description: Test device description
 mqtt:
   host: localhost
-  password: 
   port: 1883
+  password: 
   username: 
