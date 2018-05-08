@@ -2,6 +2,6 @@
 *.pyc
 *.pmdl
 *.json
-cache
-pycache__
+_cache
+__pycache__
 dist/*
