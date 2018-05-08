@@ -6,7 +6,7 @@ import json
 import mqtt_handler
 import pycountry
 import configuration_handler
-import google_cloud_speech_handler
+from google_cloud_speech import google_cloud_speech_handler
 
 logger = logging.getLogger("language_handler")
 
