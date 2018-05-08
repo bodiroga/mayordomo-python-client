@@ -3,7 +3,7 @@
 ## Python wrapper from source (Ubuntu/Debian) ##
 
 ### Dependecies ###
-- sudo apt install -y build-essential automake autoconf git
+- sudo apt install -y build-essential automake autoconf git swig3.0 sox python-pyaudio python3-pyaudio libatlas-base-dev
 
 ### Swig 3 version ###
 - swig -version 
