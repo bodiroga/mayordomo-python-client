@@ -2,6 +2,9 @@
 
 ## Python wrapper from source (Ubuntu/Debian) ##
 
+### Dependecies ###
+- sudo apt install -y build-essential automake autoconf git
+
 ### Swig 3 version ###
 - swig -version 
 - if version < 3.0.10)
@@ -12,9 +15,6 @@
   - sudo make install
   - swig -version
   - cd && rm -rf /tmp/swig
-
-### Dependecies ###
-- sudo apt install -y build-essential automake autoconf git
 
 ### Get source code ###
 - git clone https://github.com/Kitt-AI/snowboy.git /tmp/snowboy && cd /tmp/snowboy
