@@ -2,6 +2,8 @@
 *.pyc
 *.pmdl
 *.json
+snowboydetect.py
+_snowboydetect.so
 _cache
 __pycache__
 dist/*
