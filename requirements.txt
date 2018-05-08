@@ -1,0 +1,6 @@
+pyyaml
+paho-mqtt
+pycountry
+numpy
+google-cloud-speech
+pyaudio
