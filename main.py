@@ -9,7 +9,7 @@ import os
 import time
 import json
 from snowboy import snowboydecoder
-import google_cloud_speech_handler
+from google_cloud_speech import google_cloud_speech_handler
 import mqtt_handler
 import audio_handler
 import configuration_handler as config
