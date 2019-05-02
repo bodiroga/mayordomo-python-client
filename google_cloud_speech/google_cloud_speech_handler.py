@@ -31,6 +31,7 @@ from six.moves import queue
 LANGUAGE = "en-US"
 RATE = 16000
 CHUNK = int(RATE / 10)  # 100ms
+TIMEOUT = 10
 
 
 class MicrophoneStream(object):
@@ -99,23 +100,25 @@ class MicrophoneStream(object):
 
 
 def get_command(responses):
-    for response in responses:
-        if not response.results:
-            continue
-
-        result = response.results[0]
-        if not result.alternatives:
-            continue
-
-        # Display the transcription of the top alternative.
-        transcript = result.alternatives[0].transcript
-
-        if not result.is_final:
-            if re.search(r'\b(por favor|please|mesedez)\b', transcript, re.I):
+    try:
+        for response in responses:
+            if not response.results:
+                continue
+    
+            result = response.results[0]
+            if not result.alternatives:
+                continue
+    
+            # Display the transcription of the top alternative.
+            transcript = result.alternatives[0].transcript
+    
+            if not result.is_final:
+                if re.search(r'\b(por favor|please|mesedez)\b', transcript, re.I):
+                    return(transcript)
+            else:
                 return(transcript)
-
-        else:
-            return(transcript)
+    except Exception as e:
+        return None
 
 
 def start():
@@ -135,7 +138,7 @@ def start():
         requests = (types.StreamingRecognizeRequest(audio_content=content)
                     for content in audio_generator)
 
-        responses = client.streaming_recognize(streaming_config, requests)
+        responses = client.streaming_recognize(streaming_config, requests, timeout=TIMEOUT)
 
         # Now, put the transcription responses to use.
         command = get_command(responses)
@@ -154,7 +157,7 @@ def initialize(language="en-US", timeout=10, credentials_path="credentials.json"
         credentials_path = "/".join([dir_path, credentials_path])
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials_path
     LANGUAGE = language
-    DEADLINE_SECS = 3*timeout+5
+    TIMEOUT = timeout
 
 
 if __name__ == "__main__":
